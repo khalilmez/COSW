@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Session{% endblock %}
+
+{% block body %}
+    <article>
+        <div class="jumbotron">
+            <h2 class="display-4">{{ session.nom }} : du {{ session.dateDebut | date ('d/m/Y') }} au {{ session.dateFin | date ('d/m/Y') }}</h2>
+     
+            {% if is_granted('ROLE_ADMIN') %}
+    		<a href={{ path('export_session',{'id': session.id} ) }}><button type="button" class="btn btn-light">Upload notes</button></a>
+            {% endif %}
+            <div style="margin-left:1em">
+            <h3>Description</h3>
+            <p>{{ session.description }}</p>
+            </br>
+            <h3>Liste des étudiants</h3>
+            <p>{{ session.listeEtudiant | nl2br }}</p>
+            </br>
+            <h3>Liste des jurys</h3>
+            <p>{{ session.listeJury | nl2br }}</p>
+            </br>
+            <h3>Mail aux étudiants</h3>
+            <p>{{ session.texteMailEtudiant | nl2br }}</p>
+            </br>
+            <h3>Mail aux jurys</h3>
+            <p>{{ session.texteMailJury | nl2br }}</p>
+            </div>
+
+            <ul>
+            {% for soutenance in session.soutenances %}
+                    <li><a href={{ path('soutenance_show', {'id': soutenance.id}) }}>{{ soutenance.titre }}
+                    </a></li> <a href={{ path('evaluer_soutenance',{'uid':user.uid, 'uidSession':session.uid,'id': soutenance.id} ) }}><button type="button" class="btn btn-primary">Evaluer</button></a>
+                    </a></li> <a href={{ path('add_commentaire',{'uid':user.uid, 'uidSession':session.uid,'id': soutenance.id} ) }}><button type="button" class="btn btn-info">Commenter</button></a>
+            {% endfor %}
+            </ul>
+
+        </div>
+
+
+
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CREATOR') %}
+            <a class="btn btn-success" href="{{ path('session_edit', {'id': session.id}) }}">
+                Modifier
+            </a>
+
+            <a class="btn btn-success" href="{{ path('session_mail', {'id': session.id}) }}">
+                Envoyer les mails
+            </a>
+        {% endif %}
+    </article>
+    
+{% endblock %}

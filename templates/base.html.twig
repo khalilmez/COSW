@@ -2,18 +2,76 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+       <link href="https://bootswatch.com/4/solar/bootstrap.min.css" rel="stylesheet">
+        <title>{% block title %}C.O.S : Soutenance Web{% endblock %}</title>
         {# Run `composer require symfony/webpack-encore-bundle`
            and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
+           {% block stylesheets %}
+           {#{{ encore_entry_link_tags('app') }}#}
         {% endblock %}
-
+        
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="/session">Application</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          
+          <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav mr-auto">	
+             {% if app.user %}
+             <li class="nav-item active">
+                <a class="nav-link" href="{{ path('session') }}">Sessions
+                </a>
+              </li>
+             <li class="nav-item active">
+                <a class="nav-link" href="{{ path('soutenance_new') }}">Créer une soutenance
+                </a>
+              </li>
+             <li class="nav-item active">
+                <a class="nav-link" href="{{ path('modele_new') }}">Ajouter un modèle
+                </a>
+              </li>
+            </ul>
+            {% endif %}
+            <ul class="navbar-nav mr-auto">	
+             {% if app.user %}
+             {% if is_granted('ROLE_CREATOR') %}
+              <li class="nav-item active">
+                <a class="nav-link" href="{{ path('creator') }}">Creator
+                </a>
+              </li>
+             
+             {% endif %}
+             {% if is_granted('ROLE_ADMIN') %}
+              <li class="nav-item active">
+                <a class="nav-link" href="{{ path('admin') }}">Demandes de compte
+                </a>
+              </li>
+             
+             {% endif %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ path('logout') }}">Se déconnecter
+                </a>
+              </li>
+              {% else %}
+              <li class="nav-item active">
+                <a class="nav-link" href="{{ path('login') }}">Se connecter
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+ 	</div>
+  </nav>
         {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
+        
         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body><br>
+    <div class="container">
+        {% block main %}{% endblock %}
+        
+        {% block body %}
+        {% endblock %}
+    </div>
     </body>
 </html>
